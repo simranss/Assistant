@@ -7,5 +7,5 @@ if __name__ == "__main__":
     listening = True
     while listening:
         data = f.listen()
-        questions = data.split("and")
+        questions = data.split(" and ")
         listening = f.assistant(questions)
