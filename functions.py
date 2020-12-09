@@ -36,7 +36,7 @@ def speak(text, lang):
     print(text)
     tts = gTTS(text=text, lang=lang)
     tts.save("speech.mp3")
-    os.system("mpg321 speech.mp3")
+    os.system("mplayer speech.mp3")
 
 
 def listen():
@@ -82,7 +82,7 @@ def greet():
         speak("Hello Simran. How may I help you?", "en-in")
 
 
-def getDate(parameter_list):
+def getDate():
     """
     returns the current date to the user
     """
@@ -94,7 +94,7 @@ def getDate(parameter_list):
         romanLetter = {1: "st", 2: "nd", 3: "rd"}.get(lastDigit)
     day = datetime.datetime.now().strftime("%A")
     month = datetime.datetime.now().strftime("%B")
-    return ("Today is " + day + ", " + dayNum + romanLetter + " " + month)
+    return ("Today is " + str(day) + ", " + str(dayNum) + romanLetter + " " + str(month))
 
 
 def getTime():
