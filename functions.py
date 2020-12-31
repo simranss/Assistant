@@ -11,22 +11,39 @@ import json #storing and retrieving data
 import requests #handles all the http requessts
 import random #to make random choices
 import calendar #to get the day of the week
+import wolframalpha
+
+
+app_id = 'AKYPAP-T3RA5J5H3Y'
+client = wolframalpha.Client(app_id)
 
 #to add more items in the dictionary add the below text at the end of the dictionary
 #, "": ""
-websites = {"gmail": "gmail.com", "youtube": "youtube.com", "google": "google.com", "stack overflow": "stackoverflow.com", "github": "github.com", "udacity": "udacity.com", "udemy": "udemy.com", "firebase": "console.firebase.google.com", "edx": "courses.edx.org/dashboard", "spotify": "open.spotify.com", "a new tab": "chrome://newtab", "new tab": "chrome://newtab", "teams": "http://teams.microsoft.com/", "microsoft teams": "http://teams.microsoft.com/"}
+websites = {"gmail": "gmail.com", "youtube": "youtube.com", "google": "google.com", "stack overflow": "stackoverflow.com", "github": "github.com", "udacity": "udacity.com", "udemy": "udemy.com", "firebase": "console.firebase.google.com", "edx": "courses.edx.org/dashboard", "spotify": "open.spotify.com", "a new tab": "chrome://newtab", "new tab": "chrome://newtab", "teams": "http://teams.microsoft.com/", "microsoft teams": "http://teams.microsoft.com/", "whatsapp": "https://web.whatsapp.com/"}
 apps = {"android studio": "android-studio", "visual studio code": "code", "vs code": "code", "visual studio": "code", "virtual box": "virtualbox", "slack": "slack-desktop", "files": "nautilus", "software center": "snap-store", "app store": "snap-store", "snap store": "snap-store", "calculator": "gnome-calculator", "characters": "gnome-characters"}
 
 
-def wakeWord(text):
-    WAKE_WORDS = ['hai priya', 'priya'] 
-    text = text
-     
-    for phrase in WAKE_WORDS:
-        if phrase in text:
+def listenForWakeWord():
+    """
+    constantly listens for the wake word "priya" and activates if the word found
+    """
+
+    wake_word = "priya"
+
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source) #listen for 1 second to calibrate the energy threshold for ambient noise levels
+        audio = r.listen(source)
+    try:
+        data = r.recognize_google(audio) #actual code should be like data = r.recognize_google(ausio, GOOGLE_API_KEY)
+        if wake_word in data.lower():
             return True
-  
-    return False
+    except sr.UnknownValueError:
+        return False
+    except sr.RequestError as e:
+        return False
+    except:
+        return False
 
 
 def speak(text, lang):
@@ -150,7 +167,7 @@ def assistant(questions):
                 speak(time, "en-in")
                 answerCount = answerCount + 1
 
-            if " day" in question: #ask for the day of the week
+            if " day" in question or question.startswith("day") or question.startswith("de"): #ask for the day of the week
                 listening = True
                 answerCount = answerCount + 1
                 day = getDate()
@@ -190,7 +207,7 @@ def assistant(questions):
                 except:
                     speak("I am sorry, data not found about " + newQuestion)
 
-            if "bye" in question or "stop" in question: #stop listening for commands
+            if "bye" in question or "stop" in question or "exit" in question: #stop listening for commands
                 listening = False
                 answerCount = answerCount + 1
                 speak("Bye Simran, It was nice talking to you", "en-in")
